@@ -15,18 +15,18 @@ mikuclub 网页优化脚本
 ## 功能
 
 - 纯前端的 up 主屏蔽功能  
-<a href="https://imgse.com/i/pCJvJPS">
+  <a href="https://imgse.com/i/pCJvJPS">
   <img src="https://s1.ax1x.com/2023/06/22/pCJvJPS.md.png" alt="pCJvJPS.md.png" width="500px">
-</a>
+  </a>
 
 - 优化内容页功能栏  
-<a href="https://imgse.com/i/pCJjXNT">
+  <a href="https://imgse.com/i/pCJjXNT">
   <img src="https://s1.ax1x.com/2023/06/22/pCJjXNT.md.png" alt="pCJjXNT.md.png" width="500px">
-</a>
+  </a>
 
 - 提供设置  
-<a href="https://imgse.com/i/pCJvTPO"><img src="https://s1.ax1x.com/2023/06/22/pCJvTPO.md.png" alt="pCJvTPO.png" /></a>
+  <a href="https://imgse.com/i/pCJvTPO"><img src="https://s1.ax1x.com/2023/06/22/pCJvTPO.md.png" alt="pCJvTPO.png" width="500px"/></a>
 
 - 内容页相关推荐点击右半边可在新标签打开链接
 
-- 当前页过滤超过10个自动加载下一页
+- 当前页过滤超过 10 个自动加载下一页
