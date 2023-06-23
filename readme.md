@@ -25,5 +25,8 @@ mikuclub 网页优化脚本
 </a>
 
 - 提供设置  
-
 <a href="https://imgse.com/i/pCJvTPO"><img src="https://s1.ax1x.com/2023/06/22/pCJvTPO.md.png" alt="pCJvTPO.png" /></a>
+
+- 内容页相关推荐点击右半边可在新标签打开链接
+
+- 当前页过滤超过10个自动加载下一页

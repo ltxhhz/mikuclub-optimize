@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         初音社网页体验优化
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.2
 // @description  目前提供屏蔽up主和界面优化功能
 // @author       ltxhhz
 // @include      /^https:\/\/www\.mikuclub\.\w+\/\d*/
@@ -72,7 +72,7 @@
     getHeight()
     window.addEventListener("resize", getHeight)
     document.querySelector('.article-content').append(div)
-
+    //点击右半边在新标签页打开
     Array.from(document.querySelectorAll('.list-body a')).forEach(e => {
       let r = document.createElement('div')
       r.className = 'right-link'
@@ -109,13 +109,13 @@
       const arr = a.href.split('/')
       const sign = arr[arr.length - 1]
       if (o.includes(sign)) {
-        sum++
         if (type == 0) {
           el.querySelector('.card-img-container').classList.add('s-mark')
         } else {
           el.remove()
         }
       }
+      return
     } else {
       const postListEl = document.getElementById('post-list')
       for (let i = 0; i < postListEl.children.length;) {
@@ -138,12 +138,16 @@
     Toast.fire({
       title: `过滤${sum}个投稿`
     })
+    if (sum > 10) {
+      nextPage()
+    }
   }
+
   let sum = 0
 
   function filterList1() {
     const arr = Object.keys(GM_getValue('blacklist', {})),
-      type = GM_getValue('hideType', 0)
+      type = GM_getValue('hideType', 1)
     return (el) => {
       if (arr.includes(el.post_author.user_login.toLowerCase())) {
         sum++
@@ -217,10 +221,20 @@
         Toast.fire({
           title: `过滤${sum}个投稿`
         })
+        if (sum > 10) {
+          nextPage()
+        }
         sum = 0
       }
       return output;
     }
+  }
+
+  function nextPage() {
+    console.log('下一页')
+    setTimeout(() => {
+      document.querySelector('.get-next-page').click()
+    }, 1e3);
   }
   if (articleList() === null) {
     console.log('不过滤')
@@ -238,11 +252,11 @@
                         隐藏方式：
                         <label>
                         标记
-                        <input type="radio" name="hide-type" id="" value="0" ${GM_getValue('hideType', 0) == 0 ? 'checked' : ''}>
+                        <input type="radio" name="hide-type" id="" value="0" ${GM_getValue('hideType', 1) == 0 ? 'checked' : ''}>
                         </label>
                         <label>
                         隐藏
-                        <input type="radio" name="hide-type" id="" value="1" ${GM_getValue('hideType', 0) == 1 ? 'checked' : ''}>
+                        <input type="radio" name="hide-type" id="" value="1" ${GM_getValue('hideType', 1) == 1 ? 'checked' : ''}>
                         </label>
                     </div>
                     <hr>
