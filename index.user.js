@@ -6,6 +6,7 @@
 // @author       ltxhhz
 // @include      /^https:\/\/www\.mikuclub\.\w+\/\d*/
 // @match        https://www.mikuclub.win/*
+// @match        https://www.mikuclub.*/*
 // @icon         https://cdn.mikuclub.fun/favicon.ico
 // @require      https://unpkg.com/sweetalert2@11.7.12/dist/sweetalert2.min.js
 // @resource     swalcss https://unpkg.com/sweetalert2@11.7.12/dist/sweetalert2.min.css
@@ -16,8 +17,8 @@
 // @grant        GM_getResourceText
 // ==/UserScript==
 
-(function () {
-  'use strict';
+;(function () {
+  'use strict'
   GM_addStyle(`
         .right-link:hover{
             background-color:rgba(169,169,169,.3);
@@ -52,25 +53,26 @@
     icon: 'info',
     timer: 2000,
     timerProgressBar: true,
-    didOpen: (toast) => {
+    didOpen: toast => {
       toast.addEventListener('mouseenter', Swal.stopTimer)
       toast.addEventListener('mouseleave', Swal.resumeTimer)
     }
   })
 
-  function article() { //内容页功能
+  function article() {
+    //内容页功能
     let div = document.createElement('div')
-    let funcPart = document.querySelector("div.functional-part")
+    let funcPart = document.querySelector('div.functional-part')
     if (!funcPart) return
-    funcPart.style.position = "sticky"
-    funcPart.style.top = "80vh"
+    funcPart.style.position = 'sticky'
+    funcPart.style.top = '80vh'
 
     function getHeight() {
-      let toolbar = document.querySelector("div.functional-part > div:first-child")
+      let toolbar = document.querySelector('div.functional-part > div:first-child')
       div.style.height = toolbar.clientHeight + 20 + 'px'
     }
     getHeight()
-    window.addEventListener("resize", getHeight)
+    window.addEventListener('resize', getHeight)
     document.querySelector('.article-content').append(div)
     //点击右半边在新标签页打开
     Array.from(document.querySelectorAll('.list-body a')).forEach(e => {
@@ -82,8 +84,8 @@
           width: 50%;
           bottom: 0;
           z-index: 2;`
-      r.onclick = (e1) => {
-        e1.stopPropagation();
+      r.onclick = e1 => {
+        e1.stopPropagation()
         e1.preventDefault()
         open(e.href)
         return false
@@ -105,7 +107,7 @@
       type = GM_getValue('hideType', 0)
     if (el) {
       if (el.nodeType == document.TEXT_NODE) return
-      const a = el.querySelector('.card-body .card-link')
+      const a = el.querySelector('.col .card .row .text-1-rows .card-link')
       const arr = a.href.split('/')
       const sign = arr[arr.length - 1]
       if (o.includes(sign)) {
@@ -117,16 +119,16 @@
       }
       return
     } else {
-      const postListEl = document.getElementById('post-list')
-      for (let i = 0; i < postListEl.children.length;) {
+      const postListEl = document.querySelector('.post-list')
+      for (let i = 0; i < postListEl.children.length; ) {
         const e = postListEl.children.item(i)
-        const a = e.querySelector('.card-body .card-link')
+        const a = e.querySelector('.col .card .row .text-1-rows .card-link')
         const arr = a.href.split('/')
         const sign = arr[arr.length - 1]
         if (o.includes(sign)) {
           sum++
           if (type == 0) {
-            e.querySelector('.card-img-container').classList.add('s-mark')
+            e.querySelector('.card-link').classList.add('s-mark')
           } else {
             e.remove()
             continue
@@ -139,7 +141,7 @@
       title: `过滤${sum}个投稿`
     })
     if (sum > 10) {
-      nextPage()
+      //nextPage()
     }
   }
 
@@ -148,7 +150,7 @@
   function filterList1() {
     const arr = Object.keys(GM_getValue('blacklist', {})),
       type = GM_getValue('hideType', 1)
-    return (el) => {
+    return el => {
       if (arr.includes(el.post_author.user_login.toLowerCase())) {
         sum++
         return type == 0 ? el.toHTML().replaceAll('card-img-container', 'card-img-container s-mark') : ''
@@ -159,74 +161,77 @@
 
   function addHideBtn(e) {
     if (e.nodeType == document.TEXT_NODE) return
-    const avatar = e.querySelector('.card-body .avatar')
-    const a = e.querySelector('.card-body .card-link')
+    const avatar = e.querySelector('.col .card .row .col-auto .avatar')
+    const a = e.querySelector('.col .card .row .text-1-rows .card-link')
     const arr = a.href.split('/')
     const sign = arr[arr.length - 1]
     a.parentElement.classList.add('s-to-hover')
-    a.parentElement.append((() => {
-      const aa = document.createElement('a')
-      aa.innerHTML = '<i class="fa fa-eye-slash"></i>'
-      aa.classList.add('s-to-show')
-      aa.href = 'javascript:;'
-      aa.title = '隐藏此用户'
-      aa.onclick = () => {
-        addBL({
-          sign,
-          homepage: a.href,
-          name: a.textContent.trim(),
-          avatar: avatar.src
-        })
-        Toast.fire({
-          title: '添加成功',
-          icon: 'success'
-        })
-        filterList()
-      }
-      return aa
-    })())
+    a.parentElement.append(
+      (() => {
+        const aa = document.createElement('a')
+        aa.innerHTML = '<i class="fa fa-eye-slash"></i>'
+        aa.classList.add('s-to-show')
+        aa.href = 'javascript:;'
+        aa.title = '隐藏此用户'
+        aa.onclick = () => {
+          addBL({
+            sign,
+            homepage: a.href,
+            name: a.textContent.trim(),
+            avatar: avatar.src
+          })
+          Toast.fire({
+            title: '添加成功',
+            icon: 'success'
+          })
+          filterList()
+        }
+        return aa
+      })()
+    )
   }
 
-  function articleList() { //内容列表
-    const postListEl = document.getElementById('post-list')
+  function articleList() {
+    //内容列表
+    const postListEl = document.querySelector('.post-list')
     if (!postListEl) return null
     if (/(?:https?:\/\/)?www\.mikuclub\.\w+\/author\/.*/.test(location.href)) return null
     filterList()
     const observer = new MutationObserver(function (mutations) {
       for (const mutation of mutations) {
-        if (mutation.type === "childList") {
+        if (mutation.type === 'childList') {
           for (const node of mutation.addedNodes) {
             // filterList(node)
             addHideBtn(node)
           }
         }
       }
-    });
+    })
     observer.observe(postListEl, {
       childList: true
-    });
+    })
     for (let i = 0; i < postListEl.children.length; i++) {
       const e = postListEl.children.item(i)
       addHideBtn(e)
     }
     MyPostSlimList.prototype.toHTML = function () {
-      let output = '';
+      let output = ''
       if (this.length) {
         const filter = filterList1()
         //循环累积输出所有文章
         output = this.reduce((previousOutput, currentElement) => {
           previousOutput += filter(currentElement)
-          return previousOutput;
-        }, '');
+          return previousOutput
+        }, '')
         Toast.fire({
           title: `过滤${sum}个投稿`
         })
         if (sum > 10) {
-          nextPage()
+          //nextPage()
         }
         sum = 0
       }
-      return output;
+      return output
     }
   }
 
@@ -234,14 +239,13 @@
     console.log('下一页')
     setTimeout(() => {
       document.querySelector('.get-next-page').click()
-    }, 1e3);
+    }, 1e3)
   }
   if (articleList() === null) {
     console.log('不过滤')
   } else {
     console.log('过滤')
   }
-
 
   GM_registerMenuCommand('⚙️ 设置', () => {
     const settingHtml = `
@@ -262,7 +266,7 @@
                     <hr>
                     <div>列表</div>
                     <div style="max-height: 200px;overflow-y: scroll;" id="S-List">
-                    
+
                     </div>
                 </fieldset>
             </div>`
@@ -300,7 +304,7 @@
       div.append(a)
       return div
     })
-    tmp.querySelector('#S-List').append(...items.length ? items : ['空'])
+    tmp.querySelector('#S-List').append(...(items.length ? items : ['空']))
     tmp.firstElementChild.onsubmit = function (e) {
       console.log(e)
     }
@@ -312,9 +316,8 @@
       confirmButtonText: '关闭',
       customClass: {
         container: 'panai-container',
-        popup: 'panai-popup',
-
+        popup: 'panai-popup'
       }
     })
-  });
-})();
+  })
+})()
